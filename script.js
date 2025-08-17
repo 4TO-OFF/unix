@@ -8,6 +8,7 @@ function z(n, d=2) {
 function update() {
   const msEpoch = Date.now();
   const now = new Date(msEpoch);
+
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
   const day = now.getDate();
@@ -16,9 +17,16 @@ function update() {
   const secs = now.getSeconds();
   const millis = now.getMilliseconds();
 
-  const humanStr = `${year}-${z(month)}-${z(day)} ${z(hrs)}:${z(mins)}:${z(secs)}:${z(millis,3)}`;
+  // Couleur dynamique pour les millisecondes
+  const msColor = millis % 2 === 0 ? 'var(--green)' : 'var(--muted)';
 
-  human.textContent = humanStr;
+  const humanStr = `${year}-${z(month)}-${z(day)} ${z(hrs)}:${z(mins)}:${z(secs)}:` +
+                   `<span style="color:${msColor}">${z(millis,3)}</span>`;
+
+  // Affichage fuseau horaire
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  human.innerHTML = `${humanStr} (${tz})`;
   unix.textContent = `${msEpoch}`;
 
   requestAnimationFrame(update);
